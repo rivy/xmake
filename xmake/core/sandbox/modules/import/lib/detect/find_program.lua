@@ -15,7 +15,7 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
--- 
+--
 -- Copyright (C) 2015 - 2018, TBOOX Open Source Group.
 --
 -- @author      ruki
@@ -51,7 +51,7 @@ function sandbox_lib_detect_find_program._check(program, opt)
 
     -- do not attempt to run program? check it fastly
     if opt.norun then
-        return os.isfile(program) 
+        return os.isfile(program)
     end
 
     -- no check script? attempt to run it directly
@@ -80,7 +80,7 @@ end
 -- find program
 function sandbox_lib_detect_find_program._find(name, pathes, opt)
 
-    -- attempt to check it directly in current environment 
+    -- attempt to check it directly in current environment
     if sandbox_lib_detect_find_program._check(name, opt) then
         return name
     end
@@ -91,10 +91,10 @@ function sandbox_lib_detect_find_program._find(name, pathes, opt)
 
             -- format path for builtin variables
             if type(_path) == "function" then
-                local ok, results = sandbox.load(_path) 
+                local ok, results = sandbox.load(_path)
                 if ok then
                     _path = results or ""
-                else 
+                else
                     raise(results)
                 end
             else
@@ -155,7 +155,7 @@ end
 -- @param name      the program name
 -- @param opt       the options, .e.g {pathes = {"/usr/bin"}, check = function (program) os.run("%s -h", program) end, verbose = true, force = true, cachekey = "xxx"}
 --                    - opt.pathes    the program pathes (.e.g dirs, pathes, winreg pathes, script pathes)
---                    - opt.check     the check script or command 
+--                    - opt.check     the check script or command
 --                    - opt.norun     do not attempt to run program to check program fastly
 --
 -- @return          the program name or path
@@ -186,6 +186,8 @@ function sandbox_lib_detect_find_program.main(name, opt)
     -- init options
     opt = opt or {}
 
+    print("..._find_program.1()", name, table.dump(table.wrap(opt))) -- DEBUG
+
     -- init cachekey
     local cachekey = "find_program"
     if opt.cachekey then
@@ -193,13 +195,13 @@ function sandbox_lib_detect_find_program.main(name, opt)
     end
 
     -- attempt to get result from cache first
-    local cacheinfo = cache.load(cachekey) 
+    local cacheinfo = cache.load(cachekey)
     local result = cacheinfo[name]
     if result ~= nil and not opt.force then
         return utils.ifelse(result, result, nil)
     end
 
-    -- add default search pathes 
+    -- add default search pathes
     local pathes = opt.pathes
     if os.host() ~= "windows" then
         pathes = table.join(table.wrap(pathes), "/usr/local/bin", "/usr/bin")
@@ -207,7 +209,7 @@ function sandbox_lib_detect_find_program.main(name, opt)
 
     -- find executable program
     checking = utils.ifelse(coroutine_running, name, nil)
-    result = sandbox_lib_detect_find_program._find(name, pathes, opt) 
+    result = sandbox_lib_detect_find_program._find(name, pathes, opt)
     checking = nil
 
     -- cache result

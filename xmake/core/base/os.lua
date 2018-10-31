@@ -15,7 +15,7 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
--- 
+--
 -- Copyright (C) 2015 - 2018, TBOOX Open Source Group.
 --
 -- @author      ruki
@@ -43,15 +43,15 @@ os._setenv      = os._setenv or os.setenv
 os._readlink    = os._readlink or os.readlink
 os._versioninfo = os._versioninfo or os.versioninfo
 
--- copy single file or directory 
+-- copy single file or directory
 function os._cp(src, dst)
-    
+
     -- check
     assert(src and dst)
 
     -- is file?
     if os.isfile(src) then
-        
+
         -- the destination is directory? append the filename
         if os.isdir(dst) or path.islastsep(dst) then
             dst = path.join(dst, path.filename(src))
@@ -63,7 +63,7 @@ function os._cp(src, dst)
         end
     -- is directory?
     elseif os.isdir(src) then
-        
+
         -- the destination directory exists? append the filename
         if os.isdir(dst) or path.islastsep(dst) then
             dst = path.join(dst, path.filename(path.translate(src)))
@@ -78,20 +78,20 @@ function os._cp(src, dst)
     else
         return false, string.format("cannot copy file %s, error: not found this file", src)
     end
-    
+
     -- ok
     return true
 end
 
 -- move single file or directory
 function os._mv(src, dst)
-    
+
     -- check
     assert(src and dst)
 
     -- exists file or directory?
     if os.exists(src) then
- 
+
         -- the destination directory exists? append the filename
         if os.isdir(dst) or path.islastsep(dst) then
             dst = path.join(dst, path.filename(path.translate(src)))
@@ -105,14 +105,14 @@ function os._mv(src, dst)
     else
         return false, string.format("cannot move %s to %s, not found this file %s", src, dst, os.strerror())
     end
-    
+
     -- ok
     return true
 end
 
--- remove single file or directory 
+-- remove single file or directory
 function os._rm(filedir)
-    
+
     -- check
     assert(filedir)
 
@@ -140,7 +140,7 @@ function os.argw(argv)
     -- match all arguments
     local results = {}
     for _, arg in ipairs(table.wrap(argv)) do
-        
+
         -- exists wildcards?
         if arg:find("([%+%-%^%$%*%[%]%%])") then
             local pathes = os.match(arg, 'a')
@@ -189,7 +189,7 @@ end
 
 -- match files or directories
 --
--- @param pattern   the search pattern 
+-- @param pattern   the search pattern
 --                  uses "*" to match any part of a file or directory name,
 --                  uses "**" to recurse into subdirectories.
 --
@@ -202,7 +202,7 @@ end
 -- @code
 -- local dirs, count = os.match("./src/*", true)
 -- local files, count = os.match("./src/**.c")
--- local file = os.match("./src/test.c", 'f', function (filepath, isdir) 
+-- local file = os.match("./src/test.c", 'f', function (filepath, isdir)
 --                  return true   -- continue it
 --                  return false  -- break it
 --              end)
@@ -239,7 +239,7 @@ function os.match(pattern, mode, callback)
         assert(mode, "invalid match mode: %s", mode)
     elseif mode then
         mode = 1
-    else 
+    else
         mode = 0
     end
 
@@ -318,7 +318,7 @@ end
 
 -- copy files or directories
 function os.cp(...)
-   
+
     -- check arguments
     local args = {...}
     if #args < 2 then
@@ -345,7 +345,7 @@ end
 
 -- move files or directories
 function os.mv(...)
-   
+
     -- check arguments
     local args = {...}
     if #args < 2 then
@@ -372,7 +372,7 @@ end
 
 -- remove files or directories
 function os.rm(...)
-    
+
     -- check arguments
     local args = {...}
     if #args < 1 then
@@ -437,14 +437,14 @@ function os.cd(dir)
     else
         return nil, string.format("cannot change directory %s, not found this directory %s", dir, os.strerror())
     end
-    
+
     -- ok
     return oldir
 end
 
 -- create directories
 function os.mkdir(...)
-   
+
     -- check arguments
     local args = {...}
     if #args < 1 then
@@ -464,7 +464,7 @@ end
 
 -- remove directories
 function os.rmdir(...)
-   
+
     -- check arguments
     local args = {...}
     if #args < 1 then
@@ -566,7 +566,7 @@ function os.runv(program, argv, opt)
     return true
 end
 
--- execute command 
+-- execute command
 function os.exec(cmd, outfile, errfile)
 
     -- parse arguments
@@ -583,7 +583,7 @@ end
 --
 -- @param program     "clang", "xcrun -sdk macosx clang", "~/dir/test\ xxx/clang"
 --        filename    "clang", "xcrun"", "~/dir/test\ xxx/clang"
--- @param argv        the arguments 
+-- @param argv        the arguments
 -- @param opt         the option, .e.g {wildcards = false, stdout = outfile, stderr = errfile}
 --
 function os.execv(program, argv, opt)
@@ -619,7 +619,7 @@ function os.execv(program, argv, opt)
 
         -- wait process
         local waitok = -1
-        local status = -1 
+        local status = -1
         if coroutine.running() then
 
             -- save the current directory
@@ -674,7 +674,7 @@ function os.iorunv(program, argv, opt)
     local errfile = os.tmpfile()
 
     -- run command
-    local ok = os.execv(program, argv, table.join(opt or {}, {stdout = outfile, stderr = errfile})) 
+    local ok = os.execv(program, argv, table.join(opt or {}, {stdout = outfile, stderr = errfile}))
 
     -- get output and error data
     local outdata = io.readfile(outfile)
@@ -697,7 +697,7 @@ function os.raise(msg, ...)
     -- flush log
     log:flush()
 
-    -- flush io buffer 
+    -- flush io buffer
     io.flush()
 
     -- raise it
@@ -766,7 +766,7 @@ function os.is_arch(...)
     end
 end
 
--- get the system null device 
+-- get the system null device
 function os.nuldev(input)
 
     -- init the output nuldev
@@ -786,7 +786,7 @@ function os.nuldev(input)
             -- for fix issue on mingw:
             -- $ gcc -fopenmp -S -o nul -xc nul
             -- gcc: fatal error：input file ‘nul’ is the same as output file
-            -- 
+            --
             local inputfile = os.tmpfile()
             io.writefile(inputfile, "")
             xmake._NULDEV_INPUT = inputfile
@@ -808,7 +808,7 @@ function os.user_agent()
 
     -- init user agent
     if os._USER_AGENT == nil then
-        
+
         -- init systems
         local systems = {macosx = "Macintosh", linux = "Linux", windows = "Windows"}
 
@@ -902,22 +902,22 @@ function os.fscase()
     return os._FSCASE
 end
 
--- set values to environment variable 
+-- set values to environment variable
 function os.setenv(name, ...)
 
     -- get separator
     local seperator = os.host() == "windows" and ';' or ':'
-    
+
     -- append values
     return os._setenv(name, table.concat({...}, seperator))
 end
 
--- add values to environment variable 
+-- add values to environment variable
 function os.addenv(name, ...)
 
     -- get separator
     local seperator = os.host() == "windows" and ';' or ':'
-    
+
     -- append values
     return os.setenv(name, table.concat({...}, seperator) .. seperator ..  (os.getenv(name) or ""))
 end
@@ -945,6 +945,9 @@ function os.pbcopy(data)
         os.run("bash -c \"echo '" .. data .. "' | pbcopy\"")
     elseif os.host() == "linux" then
         os.run("bash -c \"echo '" .. data .. "' | xsel --clipboard --input\"")
+    elseif os.host() == "windows" then
+        -- use temp file (store date then ...)
+        os.run("clip < TEMPFILE")
     else
         -- TODO
     end

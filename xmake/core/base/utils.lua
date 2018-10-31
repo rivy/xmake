@@ -15,7 +15,7 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
--- 
+--
 -- Copyright (C) 2015 - 2018, TBOOX Open Source Group.
 --
 -- @author      ruki
@@ -43,7 +43,7 @@ function utils._print(...)
             if type(v) == "string" or type(v) == "boolean" or type(v) == "number" then
                 io.write(tostring(v))
             -- dump table
-            elseif type(v) == "table" then  
+            elseif type(v) == "table" then
                 table.dump(v)
             else
                 io.write("<" .. tostring(v) .. ">")
@@ -162,6 +162,15 @@ function utils.error(format, ...)
     end
 end
 
+-- the verbose warning function
+function utils.vwarning(format, ...)
+
+    -- enable verbose?
+    if option.get("verbose") and format ~= nil then
+        utils.warning(format, ...)
+    end
+end
+
 -- the warning function
 function utils.warning(format, ...)
 
@@ -190,7 +199,7 @@ function utils.ifelse(a, b, c)
     if a then return b else return c end
 end
 
--- call functions 
+-- call functions
 function utils.call(funcs, pred, ...)
 
     -- check
@@ -198,7 +207,7 @@ function utils.call(funcs, pred, ...)
 
     -- call all
     for _, func in ipairs(table.wrap(funcs)) do
-        
+
         -- check
         assert(type(func) == "function")
 
